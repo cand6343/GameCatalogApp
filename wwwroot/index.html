@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault — Интерактивный каталог игр</title>
+    <!-- Подключение Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-light">
+
+    <!-- Шапка и навигация -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="#">🎮 GameVault</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#catalogSection">Каталог</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#addFormSection">Добавить игру</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container my-4">
+        <div class="row g-4">
+            
+            <!-- Левая колонка: Форма добавления объекта -->
+            <div class="col-lg-4" id="addFormSection">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3 fw-bold">Добавить игру</h5>
+                        <form id="addGameForm">
+                            <div class="mb-3">
+                                <label for="titleInput" class="form-label">Название игры</label>
+                                <input type="text" id="titleInput" class="form-control" placeholder="Например: Minecraft" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="yearInput" class="form-label">Год выпуска</label>
+                                <input type="number" id="yearInput" class="form-control" min="1970" max="2035" value="2024" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="genreInput" class="form-label">Жанр</label>
+                                <select id="genreInput" class="form-select" required>
+                                    <option value="RPG">RPG</option>
+                                    <option value="Shooter">Shooter</option>
+                                    <option value="Sandbox">Sandbox</option>
+                                    <option value="Strategy">Strategy</option>
+                                    <option value="Action">Action</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Добавить в каталог</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая колонка: Поиск, фильтрация и карточки -->
+            <div class="col-lg-8" id="catalogSection">
+                <!-- Панель поиска и фильтрации -->
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-body">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-sm-7">
+                                <input type="text" id="searchInput" class="form-control" placeholder="🔍 Поиск по названию...">
+                            </div>
+                            <div class="col-sm-5">
+                                <select id="genreFilter" class="form-select">
+                                    <option value="All">Все жанры</option>
+                                    <option value="RPG">RPG</option>
+                                    <option value="Shooter">Shooter</option>
+                                    <option value="Sandbox">Sandbox</option>
+                                    <option value="Strategy">Strategy</option>
+                                    <option value="Action">Action</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Счетчик объектов -->
+                <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                    <span class="text-muted small" id="itemsCount">Загрузка...</span>
+                </div>
+
+                <!-- Список объектов в виде карточек -->
+                <div id="gamesContainer" class="row row-cols-1 row-cols-md-2 g-3">
+                    <!-- Карточки рендерятся через JS -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Интерактивное модальное окно для редактирования (PUT) -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editGameForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Редактировать игру</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editId">
+                        <div class="mb-3">
+                            <label for="editTitle" class="form-label">Название</label>
+                            <input type="text" id="editTitle" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editYear" class="form-label">Год выпуска</label>
+                            <input type="number" id="editYear" class="form-control" min="1970" max="2035" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editGenre" class="form-label">Жанр</label>
+                            <select id="editGenre" class="form-select" required>
+                                <option value="RPG">RPG</option>
+                                <option value="Shooter">Shooter</option>
+                                <option value="Sandbox">Sandbox</option>
+                                <option value="Strategy">Strategy</option>
+                                <option value="Action">Action</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-success">Сохранить изменения</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение Bootstrap JS и клиентского скрипта -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
